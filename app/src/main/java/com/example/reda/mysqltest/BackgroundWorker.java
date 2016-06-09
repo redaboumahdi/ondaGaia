@@ -36,7 +36,7 @@ public class BackgroundWorker extends AsyncTask<String,Void,String> {
     @Override
     protected String doInBackground(String... params){
         String type = params[0];
-        String login_url = "http://ondagaia.x10host.com/cgi-bin/login.php";
+        String login_url = "http://ondagaia.x10host.com/login.php";
         if(type.equals("login")){
             try {
                 String user_name = params[1];
