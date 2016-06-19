@@ -1,3 +1,12 @@
 <resources>
-    <string name="app_name">MysqlTest</string>
+    <string name="app_name">OnDaGaiaAccueil</string>
+    <string name="title_login">Login</string>
+    <string name="title_signin">Sign in</string>
+    <string name="title_accueil">Accueil</string>
+    <string name="title_accueilcamera">Accueil Camera</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_accueilcontacts">Contacts</string>
+    <string name="title_addacontact">Add a contact</string>
+    <string name="title_waitingrequest">Waiting Request</string>
+    <string name="google_maps_key">AIzaSyAGCzg7K7mjaIov7RfqgbBssAyDfGw5C0w</string>
 </resources>

@@ -1,49 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.reda.mysqltest">
-
+    package="com.example.gaspard.ondagaiaaccueil" >
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-feature android:name="android.hardware.camera"/>
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme" >
 
-        <activity android:name=".MainActivity">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
+        <meta-data android:name="CLOUDINARY_URL" android:value="http://res.cloudinary.com/djzvvfdmn"/>
+        <meta-data android:name="PARSE_APPLICATION_ID" android:value="212168143373637"/>
+        <meta-data android:name="PARSE_CLIENT_KEY" android:value="CDUO-h5Y89RWXDHqjnIwYE-j_58"/>
+
+        <activity
+            android:name=".MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".Main2Activity" >
-        <intent-filter>
-            <action android:name="com.example.reda.mysqltest.Main2Activity" />
-
-            <category android:name="android.intent.category.DEFAULT" />
-        </intent-filter>
+        <activity
+            android:name=".Login"
+            android:label="@string/title_login" >
         </activity>
 
-        <activity android:name=".Chat" >
-        <intent-filter>
-            <action android:name="com.example.reda.mysqltest.Chat" />
-
-            <category android:name="android.intent.category.DEFAULT" />
-        </intent-filter>
+        <activity
+            android:name=".Signin"
+            android:label="@string/title_signin" >
         </activity>
 
-
-        <activity android:name=".Picture">
-            <intent-filter>
-                <action android:name="android.intent.action.Picture" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-
+        <activity
+            android:name=".Accueil"
+            android:label="@string/title_accueil" >
         </activity>
+
+        <activity
+            android:name=".AccueilPicture"
+            android:label="Accueil Picture" >
+        </activity>
+
+        <activity
+            android:name=".AccueilContacts"
+            android:label="@string/title_accueilcontacts" >
+        </activity>
+
+        <activity
+            android:name=".AddAContact"
+            android:label="@string/title_addacontact" >
+        </activity>
+
+        <activity
+            android:name=".WaitingRequest"
+            android:label="@string/title_waitingrequest" >
+        </activity>
+
+        <activity
+            android:name=".ChoicePicture"
+            android:label="Choices for the picture" >
+        </activity>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
 
     </application>
 
