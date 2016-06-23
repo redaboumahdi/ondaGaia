@@ -48,7 +48,7 @@ public class BWWaitingRequest extends AsyncTask<String,Void,String> {
     protected String doInBackground(String... params) {
         try {
             String myID = params[0];
-            String contact_url = "http://10.0.2.2:8888/waitingrequest.php";
+            String contact_url = "http://192.168.0.31:8888/waitingrequest.php";
             URL url = new URL(contact_url);
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             httpURLConnection.setRequestMethod("POST");
@@ -118,20 +118,23 @@ public class BWWaitingRequest extends AsyncTask<String,Void,String> {
         }
         s="";
         while(I<result.length()){
-            if(result.charAt(I)!='}'){
+            while(result.charAt(I)!='{') {
+                I++;
+            }
+            s+=result.charAt(I);
+            I++;
+            while (result.charAt(I)!='}'){
                 s+=result.charAt(I);
                 I++;
             }
-            else{
-                s+=result.charAt(I);
-                try {
-                    array.add(new org.json.JSONObject(s));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                s="";
-                I++;
+            s+=result.charAt(I);
+            I++;
+            try {
+                array.add(new org.json.JSONObject(s));
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
+            s="";
         }
         String[] waitingfriends=new String[number];
         String[] waitingfriendsID=new String[number];

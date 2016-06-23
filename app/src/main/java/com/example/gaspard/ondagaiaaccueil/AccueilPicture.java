@@ -2,6 +2,7 @@ package com.example.gaspard.ondagaiaaccueil;
 
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.content.Intent;
@@ -44,54 +45,139 @@ import com.google.android.gms.ads.formats.NativeAd.Image;
 import java.io.File;
 import android.content.ContentResolver;
 import android.provider.MediaStore.Images.Media;
+import java.io.FileOutputStream;
+import java.io.FileNotFoundException;
+import java.io.ByteArrayOutputStream;
+import android.content.Context;
+import android.provider.MediaStore.Images;
+import android.database.Cursor;
+import java.text.SimpleDateFormat;
+import android.os.Environment;
+import java.util.Date;
+import android.app.Activity;
+import android.content.pm.PackageManager;
+import android.support.v4.content.ContextCompat;
+import android.Manifest;
+import android.support.v4.app.ActivityCompat;
+import android.util.Log;
+import android.graphics.BitmapFactory;
+import android.provider.SyncStateContract.Constants;
+import java.lang.Object;
+import android.graphics.Path;
+
 
 public class AccueilPicture extends AppCompatActivity {
-    Button b1;
-    ImageView iv;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
+    int MEDIA_TYPE_IMAGE = 1;
+    Button b1,b2;
+    //private ImageView iv;
+    private Uri file;
+    private static int RESULT_LOAD_IMAGE = 1;
     private GoogleApiClient client;
-    private static final int CAMERA_REQUEST = 100;
+
+    private File getOutputMediaFile(int type) {
+        File dcimDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        File picsDir = new File(dcimDir, "MyPics");
+
+        if (!picsDir.exists()) {
+            picsDir.mkdirs();
+        }
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        File mediaFile;
+        if (type == 1) {
+            mediaFile = new File(picsDir.getPath() + File.separator +
+                    "IMG_" + timeStamp + ".png");
+        } else {
+            return null;
+        }
+        return mediaFile;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.accueilpicture);
-        b1 = (Button) findViewById(R.id.Camera);
+        Bundle extras1 = getIntent().getExtras();
+        final String idme = extras1.getString("myID");
 
+        b1 = (Button) findViewById(R.id.Camera);
+        b2 = (Button) findViewById(R.id.Gallery);
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent cameraIntent = new  Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                file = Uri.fromFile(getOutputMediaFile(1));
+                cameraIntent.putExtra("myID", idme);
+                cameraIntent.putExtra("return-data", true);
+                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, file);
+                startActivityForResult(cameraIntent, 100);
             }
         });
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
+
+        b2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int permissionCheck = ContextCompat.checkSelfPermission(AccueilPicture.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                if (permissionCheck != PackageManager.PERMISSION_GRANTED ) {
+                    ActivityCompat.requestPermissions(AccueilPicture.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                }
+                else {
+                    Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    i.putExtra("myID", idme);
+                    startActivityForResult(i, RESULT_LOAD_IMAGE);
+                }
+            }
+        });
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK) {
-            Uri selectedImage = data.getData();
-            Bitmap bit = null;
-            try {
-                bit = Media.getBitmap(this.getContentResolver(), selectedImage);
-            } catch (IOException e) {
-                e.printStackTrace();
+        if (requestCode == 100) {
+            if (resultCode == Activity.RESULT_OK) {
+                Bundle extras2 = getIntent().getExtras();
+                final String idme = extras2.getString("myID");
+                String s=file.getPath();;
+                //Bitmap bp = BitmapFactory.decodeFile(s);
+                //ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                //bp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                //byte[] byteArray = stream.toByteArray();
+                //ImageView imgView = (ImageView) findViewById(R.id.imgView);
+                //imgView.setImageBitmap(bp);
+                Intent i = new Intent(this, PictureChoosen.class);
+                i.putExtra("ChoosenPicture",s);
+                System.out.println(idme);
+                i.putExtra("myID", idme);
+                startActivity(i);
+                //BWChooseAContact backgroundWorker = new BWChooseAContact(this);
+                //System.out.println(idme);
+                //backgroundWorker.execute(idme);
+            } else {
+                Bundle extras3 = getIntent().getExtras();
+                final String idme = extras3.getString("myID");
+                Intent i = new Intent(this, AccueilPicture.class);
+                i.putExtra("myID", idme);
+                startActivity(i);
             }
-            iv.setImageBitmap(bit);
-            Intent i = new  Intent(AccueilPicture.this,ChoicePicture.class);
-            startActivity(i);
-
-
         }
-        else{
-            Intent cameraIntent = new  Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-            startActivityForResult(cameraIntent, CAMERA_REQUEST);
+        else if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+            Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+            cursor.moveToFirst();
+            final String idme = getIntent().getExtras().getString("myID");
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+            cursor.close();
+            //ImageView imgView = (ImageView) findViewById(R.id.imgView);
+            //imgView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+            Intent i = new Intent(this, PictureChoosen.class);
+            i.putExtra("ChoosenPicture",picturePath);
+            i.putExtra("myID", idme);
+            startActivity(i);
+            //BWChooseAContact backgroundWorker = new BWChooseAContact(this);
+            //System.out.println(idme);
+            //backgroundWorker.execute(idme);
         }
     }
 
@@ -102,7 +188,7 @@ public class AccueilPicture extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu_main; this adds items to the action bar if it is present.
+        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
@@ -116,49 +202,9 @@ public class AccueilPicture extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.string.action_settings) {
+        if (id == R.id.action_settings) {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "AccueilCamera Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app URL is correct.
-                Uri.parse("android-app://com.example.gaspard.ondagaiaaccueil/http/host/path")
-        );
-        AppIndex.AppIndexApi.start(client, viewAction);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "AccueilCamera Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app URL is correct.
-                Uri.parse("android-app://com.example.gaspard.ondagaiaaccueil/http/host/path")
-        );
-        AppIndex.AppIndexApi.end(client, viewAction);
-        client.disconnect();
     }
 }

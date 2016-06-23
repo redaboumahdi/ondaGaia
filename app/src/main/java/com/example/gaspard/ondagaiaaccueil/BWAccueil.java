@@ -37,10 +37,10 @@ import org.json.simple.parser.JSONParser;
 
 
 
-public class BWAddAWaitingRequest extends AsyncTask<String,Void,String> {
+public class BWAccueil extends AsyncTask<String,Void,String> {
     Context context;
 
-    BWAddAWaitingRequest(Context ctx) {
+    BWAccueil(Context ctx) {
         context = ctx;
     }
 
@@ -48,17 +48,15 @@ public class BWAddAWaitingRequest extends AsyncTask<String,Void,String> {
     protected String doInBackground(String... params) {
         try {
             String myID = params[0];
-            String idR = params[1];
-            String contact_url = "http://192.168.0.31:8888/addawaitingrequest.php";
-            URL url = new URL(contact_url);
+            String accueil_url = "http://192.168.0.31:8888/accueil.php";
+            URL url = new URL(accueil_url);
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             httpURLConnection.setRequestMethod("POST");
             httpURLConnection.setDoOutput(true);
             httpURLConnection.setDoInput(true);
             OutputStream outputStream = httpURLConnection.getOutputStream();
             BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
-            String login_data = URLEncoder.encode("myID", "UTF-8") + "=" + URLEncoder.encode(myID, "UTF-8")+ "&"
-                    +URLEncoder.encode("idR","UTF-8")+"="+URLEncoder.encode(idR,"UTF-8");
+            String login_data = URLEncoder.encode("myID", "UTF-8") + "=" + URLEncoder.encode(myID, "UTF-8");
             bufferedWriter.write(login_data);
             bufferedWriter.flush();
             bufferedWriter.close();
@@ -120,38 +118,60 @@ public class BWAddAWaitingRequest extends AsyncTask<String,Void,String> {
         }
         s="";
         while(I<result.length()){
-            if(result.charAt(I)!='}'){
+            while(result.charAt(I)!='{') {
+                I++;
+            }
+            s+=result.charAt(I);
+            I++;
+            while (result.charAt(I)!='}'){
                 s+=result.charAt(I);
                 I++;
             }
-            else{
-                s+=result.charAt(I);
-                try {
-                    array.add(new org.json.JSONObject(s));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                s="";
-                I++;
+            s+=result.charAt(I);
+            I++;
+            try {
+                array.add(new org.json.JSONObject(s));
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
+            s="";
         }
-        String[] friends=new String[number];
+        String[] url=new String[number];
+        String[] status=new String[number];
+        String[] name=new String[number];
+        double[] lat=new double[number];
+        double[] lon=new double[number];
+        System.out.println(number);
         for (int j=0;j<number;j++) {
             String names = "";
             try {
-                org.json.JSONObject name = new org.json.JSONObject(array.get(j).toString());
-                names = name.get("first_name") + " " + name.get("last_name");
-                friends[j] = names;
+                org.json.JSONObject JSON = new org.json.JSONObject(array.get(j).toString());
+                names = JSON.get("first_name") + " " + JSON.get("last_name");
+                name[j]=names;
+                url[j]=(String)JSON.get("url");
+                status[j]=(String)JSON.get("status");
+                lat[j]= Double.parseDouble((String)JSON.get("lat"));
+                lon[j] = Double.parseDouble((String)JSON.get("lon"));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
 
-        Intent intent = new Intent(context, AccueilContacts.class);
-        String name1= "listofcontact";
+        Intent intent = new Intent(context, Accueil.class);
+        String name1= "url";
         String name2="myID";
-        intent.putExtra(name1, friends);
+        String name3="status";
+        String name4="name";
+        String name5="lat";
+        String name6="lon";
+        String name7="number";
+        intent.putExtra(name1, url);
         intent.putExtra(name2, idme);
+        intent.putExtra(name3,status);
+        intent.putExtra(name4,name);
+        intent.putExtra(name5,lat);
+        intent.putExtra(name6,lon);
+        intent.putExtra(name7,number);
         context.startActivity(intent);
     }
 
@@ -161,5 +181,3 @@ public class BWAddAWaitingRequest extends AsyncTask<String,Void,String> {
         super.onProgressUpdate(values);
     }
 }
-
-

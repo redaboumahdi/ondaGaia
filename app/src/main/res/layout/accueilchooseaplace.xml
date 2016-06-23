@@ -11,22 +11,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/map"
-        tools:context=".Accueil"
+        tools:context=".ChooseAPlace"
         android:name="com.google.android.gms.maps.SupportMapFragment">
 
         <Button
-            android:id="@+id/take"
+            android:id="@+id/send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right"
-            android:text="Take a picture" />
-
-        <Button
-            android:id="@+id/contacts"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center"
-            android:text="Contacts" />
+            android:text="Send" />
 
     </fragment>
 

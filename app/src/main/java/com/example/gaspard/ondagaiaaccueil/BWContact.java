@@ -48,7 +48,7 @@ public class BWContact extends AsyncTask<String,Void,String> {
     protected String doInBackground(String... params) {
         try {
             String myID = params[0];
-            String contact_url = "http://10.0.2.2:8888/listcontacts.php";
+            String contact_url = "http://192.168.0.31:8888/listcontacts.php";
             URL url = new URL(contact_url);
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             httpURLConnection.setRequestMethod("POST");

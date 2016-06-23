@@ -13,9 +13,9 @@
         android:text="Open the camera" />
 
     <Button
-        android:id="@+id/MyPictures"
+        android:id="@+id/Gallery"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Open My Pictures" />
+        android:text="Open Gallery" />
 
 </LinearLayout>

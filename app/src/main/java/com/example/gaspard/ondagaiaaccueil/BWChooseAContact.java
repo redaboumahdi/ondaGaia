@@ -37,10 +37,10 @@ import org.json.simple.parser.JSONParser;
 
 
 
-public class BWAddAWaitingRequest extends AsyncTask<String,Void,String> {
+public class BWChooseAContact extends AsyncTask<String,Void,String> {
     Context context;
 
-    BWAddAWaitingRequest(Context ctx) {
+    BWChooseAContact(Context ctx) {
         context = ctx;
     }
 
@@ -48,8 +48,8 @@ public class BWAddAWaitingRequest extends AsyncTask<String,Void,String> {
     protected String doInBackground(String... params) {
         try {
             String myID = params[0];
-            String idR = params[1];
-            String contact_url = "http://192.168.0.31:8888/addawaitingrequest.php";
+            String picturepath=params[1];
+            String contact_url = "http://192.168.0.31:8888/chooseacontact.php";
             URL url = new URL(contact_url);
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             httpURLConnection.setRequestMethod("POST");
@@ -57,14 +57,13 @@ public class BWAddAWaitingRequest extends AsyncTask<String,Void,String> {
             httpURLConnection.setDoInput(true);
             OutputStream outputStream = httpURLConnection.getOutputStream();
             BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
-            String login_data = URLEncoder.encode("myID", "UTF-8") + "=" + URLEncoder.encode(myID, "UTF-8")+ "&"
-                    +URLEncoder.encode("idR","UTF-8")+"="+URLEncoder.encode(idR,"UTF-8");
+            String login_data = URLEncoder.encode("myID", "UTF-8") + "=" + URLEncoder.encode(myID, "UTF-8");
             bufferedWriter.write(login_data);
             bufferedWriter.flush();
             bufferedWriter.close();
             InputStream inputStream = httpURLConnection.getInputStream();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
-            String result = "";
+            String result = "{"+picturepath+"}";
             String line = "";
             while ((line = bufferedReader.readLine()) != null) {
                 result += line;
@@ -88,14 +87,21 @@ public class BWAddAWaitingRequest extends AsyncTask<String,Void,String> {
 
     @Override
     protected void onPostExecute(String result) {
+        String picturepath="";
+        int I=1;
+        while(result.charAt(I)!='}'){
+            picturepath+=result.charAt(I);
+            I++;
+        }
+        I++;
         String s= "";
         String idme="";
-        int I=0;
         while(result.charAt(I)!='}'){
             s+=result.charAt(I);
             I++;
         }
         s+=result.charAt(I);
+        System.out.println(s);
         I++;
         try {
             org.json.JSONObject json = new org.json.JSONObject(s);
@@ -136,22 +142,28 @@ public class BWAddAWaitingRequest extends AsyncTask<String,Void,String> {
             }
         }
         String[] friends=new String[number];
+        String[] friendsID=new String[number];
         for (int j=0;j<number;j++) {
             String names = "";
             try {
                 org.json.JSONObject name = new org.json.JSONObject(array.get(j).toString());
                 names = name.get("first_name") + " " + name.get("last_name");
+                friendsID[j]= (String) name.get("numR");
                 friends[j] = names;
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
 
-        Intent intent = new Intent(context, AccueilContacts.class);
+        Intent intent = new Intent(context, ChooseAContact.class);
         String name1= "listofcontact";
         String name2="myID";
+        String name3="listofID";
+        String name4="picture";
         intent.putExtra(name1, friends);
         intent.putExtra(name2, idme);
+        intent.putExtra(name3,friendsID);
+        intent.putExtra(name4,picturepath);
         context.startActivity(intent);
     }
 
@@ -161,5 +173,3 @@ public class BWAddAWaitingRequest extends AsyncTask<String,Void,String> {
         super.onProgressUpdate(values);
     }
 }
-
-

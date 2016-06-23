@@ -44,7 +44,7 @@ public class BWAddContact extends AsyncTask<String,Void,String> {
         try {
             String numS = params[0];
             String idR=params[1];
-            String contact_url = "http://10.0.2.2:8888/addacontact.php";
+            String contact_url = "http://192.168.0.31:8888/addacontact.php";
             URL url = new URL(contact_url);
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             httpURLConnection.setRequestMethod("POST");

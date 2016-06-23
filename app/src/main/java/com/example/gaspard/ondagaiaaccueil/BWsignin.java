@@ -46,7 +46,7 @@ public class BWsignin extends AsyncTask<String,Void,String> {
                 String FIRST_NAME = params[1];
                 String LAST_NAME = params[2];
                 System.out.println(IDENTIFICATION);
-                String signin_url = "http://10.0.2.2:8888/signin.php";
+                String signin_url = "http://192.168.0.31:8888/signin.php";
                 URL url = new URL(signin_url);
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setRequestMethod("POST");
@@ -91,15 +91,12 @@ public class BWsignin extends AsyncTask<String,Void,String> {
     protected void onPostExecute(String result){
         System.out.println(result);
         if(!result.equals("This ID already exists!")) {
-            Intent intent = new Intent(context,Accueil.class);
             try {
                 JSONObject json = new JSONObject(result);
                 System.out.println(json.toString());
                 String idme =json.get("numero").toString();
-                String name= "myID";
-                intent.putExtra(name, idme);
-                Log.i("didilo",idme);
-                context.startActivity(intent);
+                BWAccueil backgroundWorker = new BWAccueil(context);
+                backgroundWorker.execute(idme);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
