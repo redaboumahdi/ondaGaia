@@ -14,6 +14,9 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
+
 import org.json.JSONException;
 import org.json.simple.JSONArray;
 
@@ -68,69 +71,37 @@ public class BWAddContact extends AsyncTask<String,Void,String> {
 
     @Override
     protected void onPostExecute(String result) {
-        String s= "";
+        StringTokenizer st = new StringTokenizer(result, ";;;");
         String myID="";
-        int I=0;
-        while(result.charAt(I)!='}'){
-            s+=result.charAt(I);
-            I++;
-        }
-        s+=result.charAt(I);
-        I++;
         try {
-            org.json.JSONObject json = new org.json.JSONObject(s);
+            org.json.JSONObject json = new org.json.JSONObject(st.nextToken());
             myID=(String)json.get("number");
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        s="";
-        int number = 0;
-        JSONArray array = new JSONArray();
-        while(result.charAt(I)!='}'){
-            s+=result.charAt(I);
-            I++;
-        }
-        s+=result.charAt(I);
-        I++;
-        try {
-            org.json.JSONObject json = new org.json.JSONObject(s);
-            number=(Integer)json.get("number");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        s="";
-        while(I<result.length()){
-            if(result.charAt(I)!='}'){
-                s+=result.charAt(I);
-                I++;
-            }
-            else{
-                s+=result.charAt(I);
-                try {
-                    array.add(new org.json.JSONObject(s));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                s="";
-                I++;
-            }
-        }
-        String[] friends=new String[number];
-        for (int j=0;j<number;j++) {
-            String names = "";
+
+        ArrayList<String> listofcontactt=new ArrayList<String>();
+
+        while (st.hasMoreElements()) {
+            String names="";
             try {
-                org.json.JSONObject name = new org.json.JSONObject(array.get(j).toString());
-                names = name.get("first_name") + " " + name.get("last_name");
-                friends[j] = names;
+                org.json.JSONObject JSON = new org.json.JSONObject(st.nextToken());
+                names =((String)JSON.get("first_name")) + " " + ((String)JSON.get("last_name"));
+                listofcontactt.add(names);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        }
+        String []listofcontact=new String[listofcontactt.size()];
+
+        for (int i=0;i<listofcontactt.size();i++){
+            listofcontact[i]=listofcontactt.get(i);
         }
 
         Intent intent = new Intent(context, Contacts.class);
         String name1= "listofcontact";
         String name2="myID";
-        intent.putExtra(name1, friends);
+        intent.putExtra(name1, listofcontact);
         intent.putExtra(name2, myID);
         context.startActivity(intent);
     }

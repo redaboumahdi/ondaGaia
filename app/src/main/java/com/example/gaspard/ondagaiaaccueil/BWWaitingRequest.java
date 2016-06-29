@@ -14,6 +14,9 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
+
 import org.json.JSONException;
 import org.json.simple.JSONArray;
 
@@ -66,77 +69,44 @@ public class BWWaitingRequest extends AsyncTask<String,Void,String> {
 
     @Override
     protected void onPostExecute(String result) {
-        String s= "";
+        StringTokenizer st = new StringTokenizer(result, ";;;");
         String myID="";
-        int I=0;
-        while(result.charAt(I)!='}'){
-            s+=result.charAt(I);
-            I++;
-        }
-        s+=result.charAt(I);
-        I++;
         try {
-            org.json.JSONObject json = new org.json.JSONObject(s);
+            org.json.JSONObject json = new org.json.JSONObject(st.nextToken());
             myID=(String)json.get("number");
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        s="";
-        int number = 0;
-        JSONArray array = new JSONArray();
-        while(result.charAt(I)!='}'){
-            s+=result.charAt(I);
-            I++;
-        }
-        s+=result.charAt(I);
-        I++;
-        try {
-            org.json.JSONObject json = new org.json.JSONObject(s);
-            number=(Integer)json.get("number");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        s="";
-        while(I<result.length()){
-            while(result.charAt(I)!='{') {
-                I++;
-            }
-            s+=result.charAt(I);
-            I++;
-            while (result.charAt(I)!='}'){
-                s+=result.charAt(I);
-                I++;
-            }
-            s+=result.charAt(I);
-            I++;
+
+        ArrayList<String> listofcontactt=new ArrayList<String>();
+        ArrayList<String> listofIDD=new ArrayList<String>();
+
+        while (st.hasMoreElements()) {
+            String names="";
             try {
-                array.add(new org.json.JSONObject(s));
+                org.json.JSONObject JSON = new org.json.JSONObject(st.nextToken());
+                names =((String)JSON.get("first_name")) + " " + ((String)JSON.get("last_name"));
+                listofcontactt.add(names);
+                listofIDD.add((String)JSON.get("idR"));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            s="";
         }
-        String[] waitingfriends=new String[number];
-        String[] waitingfriendsID=new String[number];
-        for (int j=0;j<number;j++) {
-            String names = "";
-            try {
-                org.json.JSONObject name = new org.json.JSONObject(array.get(j).toString());
-                names = name.get("first_name") + " " + name.get("last_name");
-                waitingfriendsID[j]= (String) name.get("idR");
-                waitingfriends[j] = names;
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+        String []listofcontact=new String[listofcontactt.size()];
+        String []listofID=new String[listofIDD.size()];
+
+        for (int i=0;i<listofcontactt.size();i++){
+            listofcontact[i]=listofcontactt.get(i);
+            listofID[i]=listofIDD.get(i);
         }
 
         Intent intent = new Intent(context, WaitingRequest.class);
         String name1= "listofcontact";
         String name2="myID";
         String name3="listofID";
-        intent.putExtra(name1, waitingfriends);
+        intent.putExtra(name1, listofcontact);
         intent.putExtra(name2, myID);
-        intent.putExtra(name3,waitingfriendsID);
+        intent.putExtra(name3,listofID);
         context.startActivity(intent);
     }
 
