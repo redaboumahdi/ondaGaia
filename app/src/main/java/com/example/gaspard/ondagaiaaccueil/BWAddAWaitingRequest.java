@@ -1,19 +1,8 @@
 package com.example.gaspard.ondagaiaaccueil;
 
-/**
- * Created by reda on 01/06/16.
- */
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.content.Context;
-import android.app.Activity;
-import android.content.Intent;
-import android.test.ActivityUnitTestCase;
-import android.util.Log;
-import android.widget.Toast;
-import org.json.*;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -21,21 +10,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.Reader;
 import java.net.HttpURLConnection;
-import java.net.Inet4Address;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.nio.charset.Charset;
-
 import org.json.JSONException;
-import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
-import org.json.simple.parser.ParseException;
-import org.json.simple.parser.JSONParser;
-
-
 
 public class BWAddAWaitingRequest extends AsyncTask<String,Void,String> {
     Context context;
@@ -49,8 +29,8 @@ public class BWAddAWaitingRequest extends AsyncTask<String,Void,String> {
         try {
             String myID = params[0];
             String idR = params[1];
-            String contact_url = "http://192.168.0.31:8888/addawaitingrequest.php";
-            URL url = new URL(contact_url);
+            String addawaitingrequest_url = "http://192.168.0.31:8888/addawaitingrequest.php";
+            URL url = new URL(addawaitingrequest_url);
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             httpURLConnection.setRequestMethod("POST");
             httpURLConnection.setDoOutput(true);
@@ -89,7 +69,7 @@ public class BWAddAWaitingRequest extends AsyncTask<String,Void,String> {
     @Override
     protected void onPostExecute(String result) {
         String s= "";
-        String idme="";
+        String myID="";
         int I=0;
         while(result.charAt(I)!='}'){
             s+=result.charAt(I);
@@ -99,7 +79,7 @@ public class BWAddAWaitingRequest extends AsyncTask<String,Void,String> {
         I++;
         try {
             org.json.JSONObject json = new org.json.JSONObject(s);
-            idme=(String)json.get("number");
+            myID=(String)json.get("number");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -147,11 +127,11 @@ public class BWAddAWaitingRequest extends AsyncTask<String,Void,String> {
             }
         }
 
-        Intent intent = new Intent(context, AccueilContacts.class);
+        Intent intent = new Intent(context, Contacts.class);
         String name1= "listofcontact";
         String name2="myID";
         intent.putExtra(name1, friends);
-        intent.putExtra(name2, idme);
+        intent.putExtra(name2, myID);
         context.startActivity(intent);
     }
 
@@ -163,3 +143,4 @@ public class BWAddAWaitingRequest extends AsyncTask<String,Void,String> {
 }
 
 
+//CHECK

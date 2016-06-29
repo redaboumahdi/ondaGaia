@@ -2,7 +2,6 @@ package com.example.gaspard.ondagaiaaccueil;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -11,20 +10,17 @@ public class AddAContact extends AppCompatActivity {
 
     TextView contact;
     Button add;
+    Button Back;
 
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.accueiladdacontact);
-
-        final String []friends=getIntent().getStringArrayExtra("listofcontact");
+        setContentView(R.layout.addacontact);
 
         Bundle extras = getIntent().getExtras();
-        final String idme=extras.getString("myID");
+        final String myID = extras.getString("myID");
 
-        System.out.println(idme);
-
-        contact = (TextView) findViewById(R.id.IDContact);
+        contact = (TextView) findViewById(R.id.PseudoContact);
         add=(Button)findViewById(R.id.AddContact);
         add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -33,14 +29,25 @@ public class AddAContact extends AppCompatActivity {
             }
         });
 
+        Back = (Button) findViewById(R.id.back2);
+        Back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BWContact backgroundWorker = new BWContact(AddAContact.this);
+                backgroundWorker.execute(myID);
+            }
+        });
+
     }
     public void AddingContact(View view){
-        String IDcontact = contact.getText().toString();
+        String pseudocontact = contact.getText().toString();
         BWAddContact backgroundWorker = new BWAddContact(this);
         Bundle extras = getIntent().getExtras();
-        final String idme=extras.getString("myID");
-        backgroundWorker.execute(idme,IDcontact);
+        final String myID=extras.getString("myID");
+        backgroundWorker.execute(myID,pseudocontact);
 
     }
 
 }
+
+//CHECK

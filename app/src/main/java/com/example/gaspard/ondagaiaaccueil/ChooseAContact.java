@@ -13,18 +13,19 @@ import android.widget.ListView;
 public class ChooseAContact extends AppCompatActivity {
 
     ListView mListView3;
+    Button Home;
 
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.accueilchooseacontact);
+        setContentView(R.layout.chooseacontact);
         final String []friends=getIntent().getStringArrayExtra("listofcontact");
         mListView3 = (ListView) findViewById(R.id.listView3);
 
-        final String idme=getIntent().getExtras().getString("myID");
+        final String myID=getIntent().getExtras().getString("myID");
         final String []listofID=getIntent().getStringArrayExtra("listofID");
         final String picturepath=getIntent().getExtras().getString("picture");
-        System.out.println(idme);
+        final String orientation=getIntent().getExtras().getString("orientation");
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(ChooseAContact.this,
                 android.R.layout.simple_list_item_1, friends);
@@ -38,11 +39,24 @@ public class ChooseAContact extends AppCompatActivity {
                 String name1= "picture";
                 String name2="myID";
                 String name3="IDfriend";
+                String name4="orientation";
                 i.putExtra(name1, picturepath);
-                i.putExtra(name2, idme);
+                i.putExtra(name2, myID);
                 i.putExtra(name3,listofID[position]);
+                i.putExtra(name4,orientation);
                 startActivity(i);
+            }
+        });
+
+        Home = (Button) findViewById(R.id.home5);
+        Home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BWHome backgroundWorker = new BWHome(ChooseAContact.this);
+                backgroundWorker.execute(myID);
             }
         });
     }
 }
+
+//CHECK

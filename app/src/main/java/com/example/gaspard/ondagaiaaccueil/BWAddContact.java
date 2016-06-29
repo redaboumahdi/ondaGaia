@@ -1,18 +1,8 @@
 package com.example.gaspard.ondagaiaaccueil;
 
-/**
- * Created by reda on 01/06/16.
- */
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.content.Context;
-import android.app.Activity;
-import android.content.Intent;
-import android.test.ActivityUnitTestCase;
-import android.util.Log;
-import android.widget.Toast;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -21,16 +11,11 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.Inet4Address;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
-
 import org.json.JSONException;
-import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
-import org.json.simple.parser.ParseException;
-import org.json.simple.parser.JSONParser;
 
 
 public class BWAddContact extends AsyncTask<String,Void,String> {
@@ -42,8 +27,8 @@ public class BWAddContact extends AsyncTask<String,Void,String> {
     @Override
     protected String doInBackground(String... params){
         try {
-            String numS = params[0];
-            String idR=params[1];
+            String idS = params[0];
+            String pseudoR=params[1];
             String contact_url = "http://192.168.0.31:8888/addacontact.php";
             URL url = new URL(contact_url);
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
@@ -52,9 +37,9 @@ public class BWAddContact extends AsyncTask<String,Void,String> {
             httpURLConnection.setDoInput(true);
             OutputStream outputStream = httpURLConnection.getOutputStream();
             BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
-            String login_data = URLEncoder.encode("numS","UTF-8")+"="+URLEncoder.encode(numS,"UTF-8") + "&"
-                    +URLEncoder.encode("idR","UTF-8")+"="+URLEncoder.encode(idR,"UTF-8");
-            bufferedWriter.write(login_data);
+            String addacontact_data = URLEncoder.encode("idS","UTF-8")+"="+URLEncoder.encode(idS,"UTF-8") + "&"
+                    +URLEncoder.encode("pseudoR","UTF-8")+"="+URLEncoder.encode(pseudoR,"UTF-8");
+            bufferedWriter.write(addacontact_data);
             bufferedWriter.flush();
             bufferedWriter.close();
             InputStream inputStream = httpURLConnection.getInputStream();
@@ -67,7 +52,6 @@ public class BWAddContact extends AsyncTask<String,Void,String> {
             bufferedReader.close();
             inputStream.close();
             httpURLConnection.disconnect();
-            //Log.i("DIDIlo",result);
             return result;
         } catch( MalformedURLException e){
             e.printStackTrace();
@@ -85,7 +69,7 @@ public class BWAddContact extends AsyncTask<String,Void,String> {
     @Override
     protected void onPostExecute(String result) {
         String s= "";
-        String idme="";
+        String myID="";
         int I=0;
         while(result.charAt(I)!='}'){
             s+=result.charAt(I);
@@ -95,7 +79,7 @@ public class BWAddContact extends AsyncTask<String,Void,String> {
         I++;
         try {
             org.json.JSONObject json = new org.json.JSONObject(s);
-            idme=(String)json.get("number");
+            myID=(String)json.get("number");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -137,18 +121,17 @@ public class BWAddContact extends AsyncTask<String,Void,String> {
             try {
                 org.json.JSONObject name = new org.json.JSONObject(array.get(j).toString());
                 names = name.get("first_name") + " " + name.get("last_name");
-                //System.out.println(names);
                 friends[j] = names;
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
 
-        Intent intent = new Intent(context, AccueilContacts.class);
+        Intent intent = new Intent(context, Contacts.class);
         String name1= "listofcontact";
         String name2="myID";
         intent.putExtra(name1, friends);
-        intent.putExtra(name2, idme);
+        intent.putExtra(name2, myID);
         context.startActivity(intent);
     }
 
@@ -157,6 +140,6 @@ public class BWAddContact extends AsyncTask<String,Void,String> {
         super.onProgressUpdate(values);
     }
 
-
-
 }
+
+//CHECK

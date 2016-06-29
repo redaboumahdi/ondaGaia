@@ -1,19 +1,8 @@
 package com.example.gaspard.ondagaiaaccueil;
 
-/**
- * Created by reda on 01/06/16.
- */
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.content.Context;
-import android.app.Activity;
-import android.content.Intent;
-import android.test.ActivityUnitTestCase;
-import android.util.Log;
-import android.widget.Toast;
-import org.json.*;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -21,21 +10,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.Reader;
 import java.net.HttpURLConnection;
-import java.net.Inet4Address;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.nio.charset.Charset;
-
 import org.json.JSONException;
-import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
-import org.json.simple.parser.ParseException;
-import org.json.simple.parser.JSONParser;
-
-
 
 public class BWChooseAContact extends AsyncTask<String,Void,String> {
     Context context;
@@ -49,6 +29,7 @@ public class BWChooseAContact extends AsyncTask<String,Void,String> {
         try {
             String myID = params[0];
             String picturepath=params[1];
+            String orientation=params[2];
             String contact_url = "http://192.168.0.31:8888/chooseacontact.php";
             URL url = new URL(contact_url);
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
@@ -57,13 +38,13 @@ public class BWChooseAContact extends AsyncTask<String,Void,String> {
             httpURLConnection.setDoInput(true);
             OutputStream outputStream = httpURLConnection.getOutputStream();
             BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
-            String login_data = URLEncoder.encode("myID", "UTF-8") + "=" + URLEncoder.encode(myID, "UTF-8");
-            bufferedWriter.write(login_data);
+            String contact_data = URLEncoder.encode("myID", "UTF-8") + "=" + URLEncoder.encode(myID, "UTF-8");
+            bufferedWriter.write(contact_data);
             bufferedWriter.flush();
             bufferedWriter.close();
             InputStream inputStream = httpURLConnection.getInputStream();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
-            String result = "{"+picturepath+"}";
+            String result = "{"+picturepath+"}"+"{"+orientation+"}";
             String line = "";
             while ((line = bufferedReader.readLine()) != null) {
                 result += line;
@@ -94,18 +75,24 @@ public class BWChooseAContact extends AsyncTask<String,Void,String> {
             I++;
         }
         I++;
+        String orientation="";
+        I++;
+        while(result.charAt(I)!='}'){
+            orientation+=result.charAt(I);
+            I++;
+        }
+        I++;
         String s= "";
-        String idme="";
+        String myID="";
         while(result.charAt(I)!='}'){
             s+=result.charAt(I);
             I++;
         }
         s+=result.charAt(I);
-        System.out.println(s);
         I++;
         try {
             org.json.JSONObject json = new org.json.JSONObject(s);
-            idme=(String)json.get("number");
+            myID=(String)json.get("number");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -148,7 +135,7 @@ public class BWChooseAContact extends AsyncTask<String,Void,String> {
             try {
                 org.json.JSONObject name = new org.json.JSONObject(array.get(j).toString());
                 names = name.get("first_name") + " " + name.get("last_name");
-                friendsID[j]= (String) name.get("numR");
+                friendsID[j]= (String) name.get("idR");
                 friends[j] = names;
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -160,10 +147,12 @@ public class BWChooseAContact extends AsyncTask<String,Void,String> {
         String name2="myID";
         String name3="listofID";
         String name4="picture";
+        String name5="orientation";
         intent.putExtra(name1, friends);
-        intent.putExtra(name2, idme);
+        intent.putExtra(name2, myID);
         intent.putExtra(name3,friendsID);
         intent.putExtra(name4,picturepath);
+        intent.putExtra(name5,orientation);
         context.startActivity(intent);
     }
 
@@ -173,3 +162,6 @@ public class BWChooseAContact extends AsyncTask<String,Void,String> {
         super.onProgressUpdate(values);
     }
 }
+
+
+//CHECK

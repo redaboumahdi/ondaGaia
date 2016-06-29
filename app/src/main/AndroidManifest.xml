@@ -3,29 +3,30 @@
     package="com.example.gaspard.ondagaiaaccueil" >
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:debuggable="true">
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <meta-data android:name="CLOUDINARY_URL" android:value="10.0.2.2/cloudinary://212168143373637:CDUO-h5Y89RWXDHqjnIwYE-j_58@djzvvfdmn"/>
+        <meta-data android:name="CLOUDINARY_URL" android:value="cloudinary://212168143373637:CDUO-h5Y89RWXDHqjnIwYE-j_58@djzvvfdmn"/>
         <meta-data android:name="PARSE_APPLICATION_ID" android:value="212168143373637"/>
         <meta-data android:name="PARSE_CLIENT_KEY" android:value="CDUO-h5Y89RWXDHqjnIwYE-j_58"/>
 
         <activity
-            android:name=".MainActivity" >
+            android:name=".LoginSignin" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -43,18 +44,18 @@
         </activity>
 
         <activity
-            android:name=".Accueil"
+            android:name=".Home"
             android:label="@string/title_accueil" >
         </activity>
 
         <activity
-            android:name=".AccueilPicture"
+            android:name=".TakeAPicture"
             android:label="Accueil Picture" >
 
         </activity>
 
         <activity
-            android:name=".AccueilContacts"
+            android:name=".Contacts"
             android:label="@string/title_accueilcontacts" >
         </activity>
 
@@ -83,6 +84,10 @@
             android:label="Choose A Place" >
         </activity>
 
+        <activity
+            android:name=".ShowPicture"
+            android:label="Show Picture" >
+        </activity>
 
         <meta-data
             android:name="com.google.android.gms.version"
