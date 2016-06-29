@@ -9,6 +9,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+
 
 public class ChooseAContact extends AppCompatActivity {
 
@@ -26,6 +31,23 @@ public class ChooseAContact extends AppCompatActivity {
         final String []listofID=getIntent().getStringArrayExtra("listofID");
         final String picturepath=getIntent().getExtras().getString("picture");
         final String orientation=getIntent().getExtras().getString("orientation");
+
+        ArrayList<ArrayList<String>> friends2=new ArrayList<ArrayList<String>>();
+        for (int i=0;i<friends.length;i++){
+            friends2.add(new ArrayList<String>(Arrays.asList(friends[i], listofID[i])));
+        }
+
+        Collections.sort(friends2, new Comparator<ArrayList<String>>() {
+            @Override
+            public int compare(ArrayList<String> o1, ArrayList<String> o2) {
+                return o1.get(0).compareTo(o2.get(0));
+            }
+        });
+
+        for (int i=0;i<friends.length;i++){
+            friends[i]=friends2.get(i).get(0);
+            listofID[i]=friends2.get(i).get(1);
+        }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(ChooseAContact.this,
                 android.R.layout.simple_list_item_1, friends);

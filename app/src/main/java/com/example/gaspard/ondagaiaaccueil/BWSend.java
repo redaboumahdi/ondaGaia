@@ -33,8 +33,9 @@ public class BWSend extends AsyncTask<String,Void,String> {
             String IDfriend=params[1];
             String picturepath=params[2];
             String orientation=params[3];
-            String lat=params[4];
-            String lon=params[5];
+            String radius=params[4];
+            String lat=params[5];
+            String lon=params[6];
             File file = new File (picturepath);
             Map config = new HashMap();
             config.put("api_secret", "CDUO-h5Y89RWXDHqjnIwYE-j_58");
@@ -61,6 +62,7 @@ public class BWSend extends AsyncTask<String,Void,String> {
                     +URLEncoder.encode("IDfriend","UTF-8")+"="+URLEncoder.encode(IDfriend,"UTF-8") + "&"
                     +URLEncoder.encode("urlpicture","UTF-8")+"="+URLEncoder.encode(urlpicture,"UTF-8")+"&"
                     +URLEncoder.encode("orientation","UTF-8")+"="+URLEncoder.encode(orientation,"UTF-8")+"&"
+                    +URLEncoder.encode("radius","UTF-8")+"="+URLEncoder.encode(radius,"UTF-8")+"&"
                     +URLEncoder.encode("lat","UTF-8")+"="+URLEncoder.encode(lat,"UTF-8") + "&"
                     +URLEncoder.encode("lon","UTF-8")+"="+URLEncoder.encode(lon,"UTF-8");
             bufferedWriter.write(send_data);

@@ -3,6 +3,7 @@ package com.example.gaspard.ondagaiaaccueil;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -10,6 +11,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
 import com.google.android.gms.maps.model.CameraPosition;
+import android.widget.Spinner;
+
+import java.util.ArrayList;
 
 public class ChooseAPlace extends FragmentActivity {
     private GoogleMap map;
@@ -29,6 +33,17 @@ public class ChooseAPlace extends FragmentActivity {
         final String picturepath=getIntent().getExtras().getString("picture");
         final String orientation=getIntent().getExtras().getString("orientation");
 
+        final Spinner spinner = (Spinner) findViewById(R.id.RADIUS);
+        int I=100;
+        ArrayList<Integer>data=new ArrayList<Integer>();
+        for (int i=0;i<100;i++){
+            data.add(I);
+            I+=100;
+        }
+        ArrayAdapter<Integer> dataAdapter=new ArrayAdapter<Integer>(this, android.R.layout.simple_spinner_item,data);
+        spinner.setAdapter(dataAdapter);
+
+
         map = ((SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map)).getMap();
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
@@ -47,7 +62,8 @@ public class ChooseAPlace extends FragmentActivity {
             @Override
             public void onClick(View v) {
                 BWSend backgroundWorker = new BWSend(ChooseAPlace.this);
-                backgroundWorker.execute(myID,IDfriend,picturepath,orientation,Float.toString((float)latitude),Float.toString((float)longitude));
+                System.out.println(spinner.getSelectedItem().toString());
+                backgroundWorker.execute(myID,IDfriend,picturepath,orientation,spinner.getSelectedItem().toString(),Float.toString((float)latitude),Float.toString((float)longitude));
             }
         });
 
@@ -59,6 +75,8 @@ public class ChooseAPlace extends FragmentActivity {
                 backgroundWorker.execute(myID);
             }
         });
+
+
     }
 }
 

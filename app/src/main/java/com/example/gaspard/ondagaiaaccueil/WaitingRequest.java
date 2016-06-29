@@ -8,6 +8,10 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.view.View;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class WaitingRequest extends AppCompatActivity {
     ListView mListView2;
@@ -21,6 +25,23 @@ public class WaitingRequest extends AppCompatActivity {
         final String[] waitingfriendsID = getIntent().getStringArrayExtra("listofID");
         Bundle extras = getIntent().getExtras();
         final String myID = extras.getString("myID");
+
+        ArrayList<ArrayList<String>> waitingfriends2=new ArrayList<ArrayList<String>>();
+        for (int i=0;i<waitingfriends.length;i++){
+            waitingfriends2.add(new ArrayList<String>(Arrays.asList(waitingfriends[i], waitingfriendsID[i])));
+        }
+
+        Collections.sort(waitingfriends2, new Comparator<ArrayList<String>>() {
+            @Override
+            public int compare(ArrayList<String> o1, ArrayList<String> o2) {
+                return o1.get(0).compareTo(o2.get(0));
+            }
+        });
+
+        for (int i=0;i<waitingfriends.length;i++){
+            waitingfriends[i]=waitingfriends2.get(i).get(0);
+            waitingfriendsID[i]=waitingfriends2.get(i).get(1);
+        }
 
         mListView2 = (ListView) findViewById(R.id.listView2);
 

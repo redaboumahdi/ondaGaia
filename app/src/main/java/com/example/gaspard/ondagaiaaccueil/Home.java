@@ -19,6 +19,7 @@ public class Home extends FragmentActivity {
     Button TakeAPicture;
     Button Contacts;
     Button Disconnect;
+    Button Gallery;
     Button Home;
     GoogleMap map;
     GPSTracker gps;
@@ -44,9 +45,10 @@ public class Home extends FragmentActivity {
 
         Bundle extras = getIntent().getExtras();
         final String myID = extras.getString("myID");
-        final int number = extras.getInt("number");
+        System.out.println(myID);
         final String[] url = extras.getStringArray("url");
         final String[] orientation = extras.getStringArray("orientation");
+        final String[] radius = extras.getStringArray("radius");
         final String[] status = extras.getStringArray("status");
         final String[] name = extras.getStringArray("name");
         final String[] num = extras.getStringArray("num");
@@ -56,10 +58,10 @@ public class Home extends FragmentActivity {
         gps = new GPSTracker(Home.this);
         final double mylat=gps.getLatitude();
         final double mylon=gps.getLongitude();
-        final Marker[]m=new Marker[number];
+        final Marker[]m=new Marker[url.length];
 
-        for (int i = 0; i < number; i++) {
-            if (distance(mylat, mylon, lat[i], lon[i]) < 10.0 && status[i].equals("waiting")) {
+        for (int i = 0; i < url.length; i++) {
+            if (distance(mylat, mylon, lat[i], lon[i]) < Integer.parseInt(radius[i]) && status[i].equals("waiting")) {
                 m[i]=map.addMarker(new MarkerOptions().position(new LatLng(lat[i], lon[i])).title(name[i]).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
                 BWPutAccepted bw= new BWPutAccepted(this);
                 bw.execute(num[i]);
@@ -68,7 +70,7 @@ public class Home extends FragmentActivity {
             } else if (status[i].equals("accepted")){
                 m[i]=map.addMarker(new MarkerOptions().position(new LatLng(lat[i], lon[i])).title(name[i]).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
             }
-            else if (status[i].equals("waiting") && distance(mylat, mylon, lat[i], lon[i]) >= 10.0){
+            else if (status[i].equals("waiting") && distance(mylat, mylon, lat[i], lon[i]) >= Integer.parseInt(radius[i])){
                 m[i]=map.addMarker(new MarkerOptions().position(new LatLng(lat[i], lon[i])).title(name[i]).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
             }
         }
@@ -76,7 +78,7 @@ public class Home extends FragmentActivity {
                 @Override
                 public boolean onMarkerClick(Marker arg0) {
                     int I = 0;
-                    while (!arg0.equals(m[I]) && I < number) {
+                    while (!arg0.equals(m[I]) && I < url.length) {
                         I++;
                     }
                     if (status[I]=="accepted") {
@@ -124,6 +126,20 @@ public class Home extends FragmentActivity {
             public void onClick(View v) {
                 BWHome backgroundWorker = new BWHome(Home.this);
                 backgroundWorker.execute(myID);
+            }
+        });
+
+        Gallery = (Button) findViewById(R.id.gallery);
+        Gallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i= new Intent(Home.this,Gallery.class);
+                i.putExtra("myID",myID);
+                i.putExtra("url",url);
+                i.putExtra("orientation",orientation);
+                i.putExtra("status",status);
+                i.putExtra("name",name);
+                startActivity(i);
             }
         });
     }

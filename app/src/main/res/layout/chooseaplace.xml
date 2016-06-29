@@ -14,6 +14,33 @@
         tools:context=".ChooseAPlace"
         android:name="com.google.android.gms.maps.SupportMapFragment">
 
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top" >
+
+            <TextView
+                android:id="@+id/radius"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Radius"
+                android:textSize="15dp" />
+
+            <Spinner
+                android:id="@+id/RADIUS"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/radius"/>
+
+            <TextView
+                android:id="@+id/meters"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/RADIUS"
+                android:text="meters"
+                android:textSize="15dp" />
+        </RelativeLayout>
+
         <Button
             android:id="@+id/send"
             android:layout_width="wrap_content"

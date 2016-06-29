@@ -128,6 +128,7 @@ public class BWContact extends AsyncTask<String,Void,String> {
         Intent intent = new Intent(context, Contacts.class);
         String name1= "listofcontact";
         String name2="myID";
+        System.out.println(myID);
         intent.putExtra(name1, friends);
         intent.putExtra(name2, myID);
         context.startActivity(intent);

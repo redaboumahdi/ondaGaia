@@ -14,8 +14,10 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 import org.json.JSONException;
-import org.json.simple.JSONArray;
+
 
 public class BWHome extends AsyncTask<String,Void,String> {
     Context context;
@@ -66,76 +68,61 @@ public class BWHome extends AsyncTask<String,Void,String> {
 
     @Override
     protected void onPostExecute(String result) {
-        String s= "";
+        StringTokenizer st = new StringTokenizer(result, ";;;");
         String myID="";
-        int I=0;
-        System.out.println(result);
-        while(result.charAt(I)!='}'){
-            s+=result.charAt(I);
-            I++;
-        }
-        s+=result.charAt(I);
-        I++;
         try {
-            org.json.JSONObject json = new org.json.JSONObject(s);
+            org.json.JSONObject json = new org.json.JSONObject(st.nextToken());
             myID=(String)json.get("number");
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        s="";
-        int number = 0;
-        JSONArray array = new JSONArray();
-        while(result.charAt(I)!='}'){
-            s+=result.charAt(I);
-            I++;
-        }
-        s+=result.charAt(I);
-        I++;
-        try {
-            org.json.JSONObject json = new org.json.JSONObject(s);
-            number=(Integer)json.get("number");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        s="";
-        while(I<result.length()){
-            s+=result.charAt(I);
-            I++;
-            while (result.charAt(I)!='}'){
-                s+=result.charAt(I);
-                I++;
-            }
-            s+=result.charAt(I);
-            I++;
+
+        ArrayList<String> urll=new ArrayList<String>();
+        ArrayList<String> radiuss=new ArrayList<String>();
+        ArrayList<String> statuss=new ArrayList<String>();
+        ArrayList<String> orientationn=new ArrayList<String>();
+        ArrayList<String> namee=new ArrayList<String>();
+        ArrayList<Double> latt=new ArrayList<Double>();
+        ArrayList<Double> lonn=new ArrayList<Double>();
+        ArrayList<String> numm=new ArrayList<String>();
+
+        while (st.hasMoreElements()) {
+            String names="";
             try {
-                array.add(new org.json.JSONObject(s));
+                org.json.JSONObject JSON = new org.json.JSONObject(st.nextToken());
+                names =((String)JSON.get("first_name")) + " " + ((String)JSON.get("last_name"));
+                namee.add(names);
+                urll.add((String)JSON.get("url"));
+                orientationn.add((String)JSON.get("orientation"));
+                radiuss.add((String)JSON.get("radius"));
+                statuss.add((String)JSON.get("status"));
+                numm.add((String)JSON.get("num"));
+                latt.add(Double.parseDouble((String)JSON.get("lat")));
+                lonn.add(Double.parseDouble((String)JSON.get("lon")));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            s="";
         }
-        String[] url=new String[number];
-        String[] orientation = new String[number];
-        String[] status=new String[number];
-        String[] name=new String[number];
-        double[] lat=new double[number];
-        double[] lon=new double[number];
-        String[] num=new String[number];
-        for (int j=0;j<number;j++) {
-            String names = "";
-            try {
-                org.json.JSONObject JSON = new org.json.JSONObject(array.get(j).toString());
-                names = JSON.get("first_name") + " " + JSON.get("last_name");
-                name[j]=names;
-                url[j]=(String)JSON.get("url");
-                orientation[j]=(String)JSON.get("orientation");
-                status[j]=(String)JSON.get("status");
-                num[j]=(String)JSON.get("num");
-                lat[j]= Double.parseDouble((String)JSON.get("lat"));
-                lon[j] = Double.parseDouble((String)JSON.get("lon"));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+        String []url=new String[urll.size()];
+        String []radius=new String[radiuss.size()];
+        String []status=new String[statuss.size()];
+        String []orientation=new String[orientationn.size()];
+        String []name=new String[namee.size()];
+        double []lat=new double[latt.size()];
+        double []lon=new double[lonn.size()];
+        String []num=new String[numm.size()];
+
+        System.out.println(url.length);
+
+        for (int i=0;i<urll.size();i++){
+            url[i]=urll.get(i);
+            radius[i]=radiuss.get(i);
+            status[i]=statuss.get(i);
+            orientation[i]=orientationn.get(i);
+            name[i]=namee.get(i);
+            lat[i]=latt.get(i);
+            lon[i]=lonn.get(i);
+            num[i]=numm.get(i);
         }
 
         Intent intent = new Intent(context, Home.class);
@@ -145,18 +132,18 @@ public class BWHome extends AsyncTask<String,Void,String> {
         String name4="name";
         String name5="lat";
         String name6="lon";
-        String name7="number";
         String name8="num";
         String name9="orientation";
+        String name10="radius";
         intent.putExtra(name1, url);
         intent.putExtra(name2, myID);
         intent.putExtra(name3,status);
         intent.putExtra(name4,name);
         intent.putExtra(name5,lat);
         intent.putExtra(name6,lon);
-        intent.putExtra(name7,number);
         intent.putExtra(name8,num);
         intent.putExtra(name9,orientation);
+        intent.putExtra(name10,radius);
         context.startActivity(intent);
     }
 

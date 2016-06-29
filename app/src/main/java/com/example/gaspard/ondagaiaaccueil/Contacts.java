@@ -8,6 +8,10 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ArrayAdapter;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class Contacts extends AppCompatActivity {
 
     Button addcontact;
@@ -20,11 +24,19 @@ public class Contacts extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.contacts);
         final String []friends=getIntent().getStringArrayExtra("listofcontact");
+        ArrayList<String> friends2=new ArrayList<String>();
+        for (int i=0;i<friends.length;i++){
+            friends2.add(friends[i]);
+        }
+        Collections.sort(friends2);
+        for (int i=0;i<friends.length;i++){
+            friends[i]=friends2.get(i);
+        }
         mListView = (ListView) findViewById(R.id.listView);
 
         Bundle extras1 = getIntent().getExtras();
         final String myID=extras1.getString("myID");
-
+        System.out.println(myID);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(Contacts.this,
                 android.R.layout.simple_list_item_1, friends);
