@@ -7,10 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ArrayAdapter;
-
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 public class Contacts extends AppCompatActivity {
 

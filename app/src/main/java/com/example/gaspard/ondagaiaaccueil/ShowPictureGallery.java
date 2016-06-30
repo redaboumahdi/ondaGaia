@@ -28,10 +28,10 @@ public class ShowPictureGallery extends AppCompatActivity {
         final String myID = extras.getString("myID");
         final String[] url = extras.getStringArray("url");
         final String[] orientation = extras.getStringArray("orientation");
-        final String[] status = extras.getStringArray("status");
-        final String[] name = extras.getStringArray("name");
         final String urlaccepted=extras.getString("urlaccepted");
         final String orientationaccepted=extras.getString("orientationaccepted");
+        final String[] friends = extras.getStringArray("listofcontact");
+        final String[] date = extras.getStringArray("date");
         URL u = null;
         try {
             u = new URL(urlaccepted);
@@ -97,8 +97,8 @@ public class ShowPictureGallery extends AppCompatActivity {
                 i.putExtra("myID",myID);
                 i.putExtra("url",url);
                 i.putExtra("orientation",orientation);
-                i.putExtra("status",status);
-                i.putExtra("name",name);
+                i.putExtra("date",date);
+                i.putExtra("listofcontact",friends);
                 startActivity(i);
             }
         });

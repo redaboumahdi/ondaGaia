@@ -16,9 +16,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
-
 import org.json.JSONException;
-import org.json.simple.JSONArray;
 
 public class BWContact extends AsyncTask<String,Void,String> {
     Context context;

@@ -13,6 +13,9 @@ import android.view.View;
 import android.widget.Button;
 import java.lang.Math;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import android.os.AsyncTask;
 
 public class Home extends FragmentActivity {
 
@@ -45,7 +48,6 @@ public class Home extends FragmentActivity {
 
         Bundle extras = getIntent().getExtras();
         final String myID = extras.getString("myID");
-        System.out.println(myID);
         final String[] url = extras.getStringArray("url");
         final String[] orientation = extras.getStringArray("orientation");
         final String[] radius = extras.getStringArray("radius");
@@ -63,10 +65,13 @@ public class Home extends FragmentActivity {
         for (int i = 0; i < url.length; i++) {
             if (distance(mylat, mylon, lat[i], lon[i]) < Integer.parseInt(radius[i]) && status[i].equals("waiting")) {
                 m[i]=map.addMarker(new MarkerOptions().position(new LatLng(lat[i], lon[i])).title(name[i]).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
-                BWPutAccepted bw= new BWPutAccepted(this);
-                bw.execute(num[i]);
                 status[i]="accepted";
-
+                Calendar c=new GregorianCalendar();
+                final String date= Long.toString(c.getTimeInMillis());
+                final String nn=num[i];
+                status[i]="accepted";
+                BWPutAccepted bw=new BWPutAccepted(this);
+                bw.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, nn,date);
             } else if (status[i].equals("accepted")){
                 m[i]=map.addMarker(new MarkerOptions().position(new LatLng(lat[i], lon[i])).title(name[i]).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
             }
@@ -74,6 +79,7 @@ public class Home extends FragmentActivity {
                 m[i]=map.addMarker(new MarkerOptions().position(new LatLng(lat[i], lon[i])).title(name[i]).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
             }
         }
+
         map.setOnMarkerClickListener(new OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(Marker arg0) {
@@ -81,7 +87,7 @@ public class Home extends FragmentActivity {
                     while (!arg0.equals(m[I]) && I < url.length) {
                         I++;
                     }
-                    if (status[I]=="accepted") {
+                    if (status[I].equals("accepted")) {
                         Intent i = new Intent(Home.this, ShowPicture.class);
                         i.putExtra("url", url[I]);
                         i.putExtra("myID",myID);
@@ -133,13 +139,8 @@ public class Home extends FragmentActivity {
         Gallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i= new Intent(Home.this,Gallery.class);
-                i.putExtra("myID",myID);
-                i.putExtra("url",url);
-                i.putExtra("orientation",orientation);
-                i.putExtra("status",status);
-                i.putExtra("name",name);
-                startActivity(i);
+                BWGallery backgroundWorker = new BWGallery(Home.this);
+                backgroundWorker.execute(myID);
             }
         });
     }

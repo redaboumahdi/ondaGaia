@@ -19,51 +19,50 @@ import java.util.StringTokenizer;
 import org.json.JSONException;
 
 
-public class BWAddContact extends AsyncTask<String,Void,String> {
+public class BWGallery extends AsyncTask<String,Void,String> {
     Context context;
-    BWAddContact(Context ctx){
+
+    BWGallery(Context ctx) {
         context = ctx;
     }
 
     @Override
-    protected String doInBackground(String... params){
+    protected String doInBackground(String... params) {
         try {
-            String idS = params[0];
-            String pseudoR=params[1];
-            String contact_url = "http://192.168.0.31:8888/addacontact.php";
-            URL url = new URL(contact_url);
+            String myID = params[0];
+            String gallery_url = "http://192.168.0.31:8888/gallery.php";
+            URL url = new URL(gallery_url);
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             httpURLConnection.setRequestMethod("POST");
             httpURLConnection.setDoOutput(true);
             httpURLConnection.setDoInput(true);
             OutputStream outputStream = httpURLConnection.getOutputStream();
             BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
-            String addacontact_data = URLEncoder.encode("idS","UTF-8")+"="+URLEncoder.encode(idS,"UTF-8") + "&"
-                    +URLEncoder.encode("pseudoR","UTF-8")+"="+URLEncoder.encode(pseudoR,"UTF-8");
-            bufferedWriter.write(addacontact_data);
+            String gallery_data = URLEncoder.encode("myID", "UTF-8") + "=" + URLEncoder.encode(myID, "UTF-8");
+            bufferedWriter.write(gallery_data);
             bufferedWriter.flush();
             bufferedWriter.close();
             InputStream inputStream = httpURLConnection.getInputStream();
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"UTF-8"));
-            String result="";
-            String line="";
-            while ((line = bufferedReader.readLine())!= null){
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+            String result = "";
+            String line = "";
+            while ((line = bufferedReader.readLine()) != null) {
                 result += line;
             }
             bufferedReader.close();
             inputStream.close();
             httpURLConnection.disconnect();
             return result;
-        } catch( MalformedURLException e){
+        } catch (MalformedURLException e) {
             e.printStackTrace();
-        } catch ( IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
     }
 
     @Override
-    protected void onPreExecute(){
+    protected void onPreExecute() {
         super.onPreExecute();
     }
 
@@ -79,6 +78,9 @@ public class BWAddContact extends AsyncTask<String,Void,String> {
         }
 
         ArrayList<String> listofcontactt=new ArrayList<String>();
+        ArrayList<String> urll=new ArrayList<String>();
+        ArrayList<String> orientationn=new ArrayList<String>();
+        ArrayList<String> datee=new ArrayList<String>();
 
         while (st.hasMoreElements()) {
             String names="";
@@ -86,29 +88,42 @@ public class BWAddContact extends AsyncTask<String,Void,String> {
                 org.json.JSONObject JSON = new org.json.JSONObject(st.nextToken());
                 names =((String)JSON.get("first_name")) + " " + ((String)JSON.get("last_name"));
                 listofcontactt.add(names);
+                urll.add((String)JSON.get("url"));
+                orientationn.add((String)JSON.get("orientation"));
+                datee.add((String)JSON.get("date"));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
         String []listofcontact=new String[listofcontactt.size()];
+        String []url=new String[urll.size()];
+        String []orientation=new String[orientationn.size()];
+        String []date=new String[datee.size()];
 
         for (int i=0;i<listofcontactt.size();i++){
             listofcontact[i]=listofcontactt.get(i);
+            url[i]=urll.get(i);
+            orientation[i]=orientationn.get(i);
+            date[i]=datee.get(i);
         }
 
-        Intent intent = new Intent(context, Contacts.class);
+        Intent intent = new Intent(context, Gallery.class);
         String name1= "listofcontact";
         String name2="myID";
+        String name3="url";
+        String name4="orientation";
+        String name5="date";
         intent.putExtra(name1, listofcontact);
         intent.putExtra(name2, myID);
+        intent.putExtra(name3,url);
+        intent.putExtra(name4,orientation);
+        intent.putExtra(name5,date);
         context.startActivity(intent);
     }
 
+
     @Override
-    protected void onProgressUpdate(Void... values){
+    protected void onProgressUpdate(Void... values) {
         super.onProgressUpdate(values);
     }
-
 }
-
-//CHECK

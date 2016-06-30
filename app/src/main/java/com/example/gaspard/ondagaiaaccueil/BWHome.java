@@ -112,8 +112,6 @@ public class BWHome extends AsyncTask<String,Void,String> {
         double []lon=new double[lonn.size()];
         String []num=new String[numm.size()];
 
-        System.out.println(url.length);
-
         for (int i=0;i<urll.size();i++){
             url[i]=urll.get(i);
             radius[i]=radiuss.get(i);
