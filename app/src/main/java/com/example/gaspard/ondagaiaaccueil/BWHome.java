@@ -1,8 +1,12 @@
 package com.example.gaspard.ondagaiaaccueil;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.content.Context;
+import android.view.View;
+
+import org.json.JSONException;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -16,7 +20,6 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
-import org.json.JSONException;
 
 
 public class BWHome extends AsyncTask<String,Void,String> {
@@ -30,7 +33,7 @@ public class BWHome extends AsyncTask<String,Void,String> {
     protected String doInBackground(String... params) {
         try {
             String myID = params[0];
-            String home_url = "http://192.168.0.31:8888/home.php";
+            String home_url = "http://192.168.8.102:8888/home.php";
             URL url = new URL(home_url);
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             httpURLConnection.setRequestMethod("POST");
@@ -69,13 +72,6 @@ public class BWHome extends AsyncTask<String,Void,String> {
     @Override
     protected void onPostExecute(String result) {
         StringTokenizer st = new StringTokenizer(result, ";;;");
-        String myID="";
-        try {
-            org.json.JSONObject json = new org.json.JSONObject(st.nextToken());
-            myID=(String)json.get("number");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
         ArrayList<String> urll=new ArrayList<String>();
         ArrayList<String> radiuss=new ArrayList<String>();
@@ -125,7 +121,6 @@ public class BWHome extends AsyncTask<String,Void,String> {
 
         Intent intent = new Intent(context, Home.class);
         String name1= "url";
-        String name2="myID";
         String name3="status";
         String name4="name";
         String name5="lat";
@@ -134,7 +129,6 @@ public class BWHome extends AsyncTask<String,Void,String> {
         String name9="orientation";
         String name10="radius";
         intent.putExtra(name1, url);
-        intent.putExtra(name2, myID);
         intent.putExtra(name3,status);
         intent.putExtra(name4,name);
         intent.putExtra(name5,lat);
@@ -142,6 +136,7 @@ public class BWHome extends AsyncTask<String,Void,String> {
         intent.putExtra(name8,num);
         intent.putExtra(name9,orientation);
         intent.putExtra(name10,radius);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 

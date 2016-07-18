@@ -8,14 +8,17 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
 
     <application
+        android:name=".GlobalVar"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:label="OnDaGaia"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:debuggable="true">
+        android:hardwareAccelerated="false"
+        android:largeHeap="true">
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -34,69 +37,68 @@
         </activity>
 
         <activity
-            android:name=".Login"
-            android:label="@string/title_login" >
+            android:name=".Login">
         </activity>
 
         <activity
-            android:name=".Signin"
-            android:label="@string/title_signin" >
+            android:name=".Signin">
         </activity>
 
         <activity
-            android:name=".Home"
-            android:label="@string/title_accueil" >
+            android:name=".Home" >
         </activity>
 
         <activity
-            android:name=".TakeAPicture"
-            android:label="Accueil Picture" >
-
+            android:name=".TakeAPicture" >
         </activity>
 
         <activity
-            android:name=".Contacts"
-            android:label="@string/title_accueilcontacts" >
+            android:name=".Contacts">
         </activity>
 
         <activity
-            android:name=".AddAContact"
-            android:label="@string/title_addacontact" >
+            android:name=".AddAContact" >
         </activity>
 
         <activity
-            android:name=".WaitingRequest"
-            android:label="@string/title_waitingrequest" >
+            android:windowSoftInputMode="stateHidden"
+            android:name=".ChooseAContact" >
         </activity>
 
         <activity
-            android:name=".ChooseAContact"
-            android:label="Choose a Contact" >
+            android:name=".PictureChoosen" >
         </activity>
 
         <activity
-            android:name=".PictureChoosen"
-            android:label="Choosen Picture" >
+            android:name=".ChooseAPlace" >
         </activity>
 
         <activity
-            android:name=".ChooseAPlace"
-            android:label="Choose A Place" >
+            android:name=".ShowPicture" >
         </activity>
 
         <activity
-            android:name=".ShowPicture"
-            android:label="Show Picture" >
+            android:name=".Gallery">
         </activity>
 
         <activity
-            android:name=".Gallery"
-            android:label="Gallery" >
+            android:name=".ShowPictureGallery" >
         </activity>
 
         <activity
-            android:name=".ShowPictureGallery"
-            android:label="Show Picture" >
+        android:name=".ShowPictureBlur" >
+        </activity>
+
+        <activity
+            android:name=".Chat" >
+        </activity>
+
+        <activity
+            android:name=".Chat2" >
+        </activity>
+
+        <activity
+            android:name=".Chat3" >
         </activity>
 
         <meta-data

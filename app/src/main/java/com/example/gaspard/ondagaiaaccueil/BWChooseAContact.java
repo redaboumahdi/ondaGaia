@@ -1,8 +1,9 @@
 package com.example.gaspard.ondagaiaaccueil;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.content.Context;
+import org.json.JSONException;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -16,7 +17,6 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
-import org.json.JSONException;
 
 
 public class BWChooseAContact extends AsyncTask<String,Void,String> {
@@ -32,7 +32,7 @@ public class BWChooseAContact extends AsyncTask<String,Void,String> {
             String myID = params[0];
             String picturepath=params[1];
             String orientation=params[2];
-            String contact_url = "http://192.168.0.31:8888/chooseacontact.php";
+            String contact_url = "http://192.168.8.102:8888/chooseacontact.php";
             URL url = new URL(contact_url);
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             httpURLConnection.setRequestMethod("POST");
@@ -71,17 +71,10 @@ public class BWChooseAContact extends AsyncTask<String,Void,String> {
     @Override
     protected void onPostExecute(String result) {
         StringTokenizer st = new StringTokenizer(result, ";;;");
-        String myID="";
         String picturepath="";
         String orientation="";
         picturepath=st.nextToken();
         orientation=st.nextToken();
-        try {
-            org.json.JSONObject json = new org.json.JSONObject(st.nextToken());
-            myID=(String)json.get("number");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
         ArrayList<String> listofcontactt=new ArrayList<String>();
         ArrayList<String> listofIDD=new ArrayList<String>();
@@ -100,6 +93,8 @@ public class BWChooseAContact extends AsyncTask<String,Void,String> {
         String []listofcontact=new String[listofcontactt.size()];
         String []listofID=new String[listofIDD.size()];
 
+
+
         for (int i=0;i<listofcontactt.size();i++){
             listofcontact[i]=listofcontactt.get(i);
             listofID[i]=listofIDD.get(i);
@@ -107,15 +102,14 @@ public class BWChooseAContact extends AsyncTask<String,Void,String> {
 
         Intent intent = new Intent(context, ChooseAContact.class);
         String name1= "listofcontact";
-        String name2="myID";
         String name3="listofID";
-        String name4="picture";
+        String name4="picturepath";
         String name5="orientation";
         intent.putExtra(name1, listofcontact);
-        intent.putExtra(name2, myID);
         intent.putExtra(name3,listofID);
         intent.putExtra(name4,picturepath);
         intent.putExtra(name5,orientation);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 

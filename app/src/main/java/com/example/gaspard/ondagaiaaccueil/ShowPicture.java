@@ -1,5 +1,6 @@
 package com.example.gaspard.ondagaiaaccueil;
 
+import android.content.Intent;
 import android.graphics.Matrix;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,17 +14,21 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.HttpURLConnection;
+import android.support.v7.app.AlertDialog;
+import android.content.DialogInterface;
 
 public class ShowPicture extends AppCompatActivity {
 
-    Button Home;
+    Button Home,Suppress;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.showpicture);
         final String url = getIntent().getExtras().getString("url");
-        final String myID = getIntent().getExtras().getString("myID");
         final String orientation = getIntent().getExtras().getString("orientation");
+        final String num = getIntent().getExtras().getString("num");
+        final String myID = ((GlobalVar)this.getApplication()).getmyID();
+
         URL u = null;
         try {
             u = new URL(url);
@@ -76,8 +81,37 @@ public class ShowPicture extends AppCompatActivity {
         Home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BWHome backgroundWorker = new BWHome(ShowPicture.this);
-                backgroundWorker.execute(myID);
+                BWHome bw=new BWHome(ShowPicture.this);
+                bw.execute(myID);
+            }
+        });
+
+        Suppress = (Button) findViewById(R.id.suppress1);
+        Suppress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ShowPicture.this);
+                alertDialogBuilder.setMessage("Are you sure you wanted to suppress the picture?");
+
+                alertDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        BWSuppressPicture bw =new BWSuppressPicture(ShowPicture.this);
+                        bw.execute(num);
+                        BWHome bww= new BWHome(ShowPicture.this);
+                        bww.execute(myID);
+                    }
+                });
+
+                alertDialogBuilder.setNegativeButton("No",new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                });
+
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
             }
         });
     }

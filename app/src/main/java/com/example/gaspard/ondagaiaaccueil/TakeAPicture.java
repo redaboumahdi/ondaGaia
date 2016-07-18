@@ -50,16 +50,16 @@ public class TakeAPicture extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.takeapicture);
-        Bundle extras1 = getIntent().getExtras();
-        final String myID = extras1.getString("myID");
+
+        final String myID = ((GlobalVar)this.getApplication()).getmyID();
 
 
         Home = (Button) findViewById(R.id.home3);
         Home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BWHome backgroundWorker = new BWHome(TakeAPicture.this);
-                backgroundWorker.execute(myID);
+                BWHome bw=new BWHome(TakeAPicture.this);
+                bw.execute(myID);
             }
         });
 
@@ -70,7 +70,6 @@ public class TakeAPicture extends AppCompatActivity {
             public void onClick(View v) {
                 Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 file = Uri.fromFile(getOutputMediaFile(1));
-                cameraIntent.putExtra("myID", myID);
                 cameraIntent.putExtra("return-data", true);
                 cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, file);
                 startActivityForResult(cameraIntent, 1);
@@ -86,7 +85,6 @@ public class TakeAPicture extends AppCompatActivity {
                 }
                 else {
                     Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    i.putExtra("myID", myID);
                     startActivityForResult(i,2);
                 }
             }
@@ -99,19 +97,12 @@ public class TakeAPicture extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
-                Bundle extras2 = getIntent().getExtras();
-                final String idme = extras2.getString("myID");
-                String s=file.getPath();;
+                String picturepath=file.getPath();;
                 Intent i = new Intent(this, PictureChoosen.class);
-                i.putExtra("ChoosenPicture",s);
-                System.out.println(idme);
-                i.putExtra("myID", idme);
+                i.putExtra("ChoosenPicture",picturepath);
                 startActivity(i);
             } else {
-                Bundle extras3 = getIntent().getExtras();
-                final String idme = extras3.getString("myID");
                 Intent i = new Intent(this, TakeAPicture.class);
-                i.putExtra("myID", idme);
                 startActivity(i);
             }
         }
@@ -120,13 +111,11 @@ public class TakeAPicture extends AppCompatActivity {
             String[] filePathColumn = { MediaStore.Images.Media.DATA };
             Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
             cursor.moveToFirst();
-            final String idme = getIntent().getExtras().getString("myID");
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
             Intent i = new Intent(this, PictureChoosen.class);
             i.putExtra("ChoosenPicture",picturePath);
-            i.putExtra("myID", idme);
             startActivity(i);
         }
     }
@@ -138,16 +127,13 @@ public class TakeAPicture extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         int id = item.getItemId();
-
         if (id == R.id.action_settings) {
             return true;
         }

@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.widget.Button;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
+import android.content.Intent;
 
 public class PictureChoosen extends AppCompatActivity {
 
@@ -17,8 +18,8 @@ public class PictureChoosen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        final String myID = ((GlobalVar)this.getApplication()).getmyID();
         Bundle extras = getIntent().getExtras();
-        final String myID = extras.getString("myID");
         final String picturepath = extras.getString("ChoosenPicture");
         Bitmap bp= BitmapFactory.decodeFile(picturepath);
         int orientation=0;
@@ -51,8 +52,8 @@ public class PictureChoosen extends AppCompatActivity {
         Send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BWChooseAContact backgroundWorker = new BWChooseAContact(PictureChoosen.this);
-                backgroundWorker.execute(myID,picturepath, Orientation);
+                BWChooseAContact bw=new BWChooseAContact(PictureChoosen.this);
+                bw.execute(myID,picturepath,Orientation);
             }
         });
 
@@ -60,8 +61,8 @@ public class PictureChoosen extends AppCompatActivity {
         Home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BWHome backgroundWorker = new BWHome(PictureChoosen.this);
-                backgroundWorker.execute(myID);
+                BWHome bw=new BWHome(PictureChoosen.this);
+                bw.execute(myID);
             }
         });
 

@@ -16,9 +16,7 @@ public class AddAContact extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.addacontact);
-
-        Bundle extras = getIntent().getExtras();
-        final String myID = extras.getString("myID");
+        final String myID=((GlobalVar)this.getApplication()).getmyID();
 
         contact = (TextView) findViewById(R.id.PseudoContact);
         add=(Button)findViewById(R.id.AddContact);
@@ -33,8 +31,8 @@ public class AddAContact extends AppCompatActivity {
         Back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BWContact backgroundWorker = new BWContact(AddAContact.this);
-                backgroundWorker.execute(myID);
+                BWContact bw=new BWContact(AddAContact.this);
+                bw.execute(myID);
             }
         });
 
@@ -42,8 +40,7 @@ public class AddAContact extends AppCompatActivity {
     public void AddingContact(View view){
         String pseudocontact = contact.getText().toString();
         BWAddContact backgroundWorker = new BWAddContact(this);
-        Bundle extras = getIntent().getExtras();
-        final String myID=extras.getString("myID");
+        String myID=((GlobalVar)this.getApplication()).getmyID();
         backgroundWorker.execute(myID,pseudocontact);
 
     }

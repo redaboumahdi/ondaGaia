@@ -1,5 +1,7 @@
 package com.example.gaspard.ondagaiaaccueil;
 
+
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.content.Context;
 import java.io.BufferedReader;
@@ -31,7 +33,9 @@ public class BWSignin extends AsyncTask<String,Void,String> {
                 String pseudo = params[0];
                 String first_name = params[1];
                 String last_name = params[2];
-                String signin_url = "http://192.168.0.31:8888/signin.php";
+                String phone=params[5];
+                String mail=params[6];
+                String signin_url = "http://192.168.8.102:8888/signin.php";
                 URL url = new URL(signin_url);
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setRequestMethod("POST");
@@ -42,7 +46,9 @@ public class BWSignin extends AsyncTask<String,Void,String> {
                 String post_data = URLEncoder.encode("pseudo", "UTF-8") + "=" + URLEncoder.encode(pseudo, "UTF-8") + "&"
                         + URLEncoder.encode("first_name", "UTF-8") + "=" + URLEncoder.encode(first_name, "UTF-8") + "&"
                         + URLEncoder.encode("last_name", "UTF-8") + "=" + URLEncoder.encode(last_name, "UTF-8") + "&"
-                        + URLEncoder.encode("password", "UTF-8") + "=" + URLEncoder.encode(password, "UTF-8");
+                        + URLEncoder.encode("password", "UTF-8") + "=" + URLEncoder.encode(password, "UTF-8")+ "&"
+                        + URLEncoder.encode("phone", "UTF-8") + "=" + URLEncoder.encode(phone, "UTF-8") + "&"
+                        + URLEncoder.encode("mail", "UTF-8") + "=" + URLEncoder.encode(mail, "UTF-8");
                 bufferedWriter.write(post_data);
                 bufferedWriter.flush();
                 bufferedWriter.close();
@@ -78,12 +84,18 @@ public class BWSignin extends AsyncTask<String,Void,String> {
             try {
                 JSONObject json = new JSONObject(result);
                 String myID =json.get("numero").toString();
-                BWHome backgroundWorker = new BWHome(context);
-                backgroundWorker.execute(myID);
+                ((GlobalVar)this.context).setmyID(myID);
+                BWHome bw=new BWHome(this.context);
+                bw.execute(myID);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
+        }
+        else{
+            Intent i=new Intent(this.context, Signin.class);
+            i.putExtra("result",result);
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            this.context.startActivity(i);
         }
     }
 

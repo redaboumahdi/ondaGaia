@@ -4,6 +4,7 @@ import android.graphics.Matrix;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.GridView;
 import android.os.Bundle;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -20,6 +21,8 @@ import android.widget.AdapterView;
 import android.view.View;
 import android.content.Intent;
 import android.widget.Button;
+import android.util.Base64;
+import java.io.ByteArrayOutputStream;
 
 public class Gallery extends AppCompatActivity {
     private GridView gridView;
@@ -31,16 +34,20 @@ public class Gallery extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gallery);
 
+        final String myID= ((GlobalVar)this.getApplication()).getmyID();
+
         Bundle extras = getIntent().getExtras();
-        final String myID = extras.getString("myID");
-        final String[] friends = extras.getStringArray("listofcontact");
-        final String[] url = extras.getStringArray("url");
-        final String[] orientation = extras.getStringArray("orientation");
-        final String[] date = extras.getStringArray("date");
+        final String[] friendsgallery = extras.getStringArray("listofcontact");
+        final String[] urlgallery = extras.getStringArray("url");
+        final String[] orientationgallery = extras.getStringArray("orientation");
+        final String[] dategallery = extras.getStringArray("date");
+        final String[] numgallery = extras.getStringArray("num");
+
+
 
         ArrayList<ArrayList<String>> friends2=new ArrayList<ArrayList<String>>();
-        for (int i=0;i<friends.length;i++){
-            friends2.add(new ArrayList<String>(Arrays.asList(date[i], friends[i],url[i],orientation[i])));
+        for (int i=0;i<friendsgallery.length;i++){
+            friends2.add(new ArrayList<String>(Arrays.asList(dategallery[i], friendsgallery[i],orientationgallery[i],numgallery[i],urlgallery[i])));
         }
 
         Collections.sort(friends2, new Comparator<ArrayList<String>>() {
@@ -50,18 +57,12 @@ public class Gallery extends AppCompatActivity {
             }
         });
 
-        for (int i=0;i<friends.length;i++){
-            date[i]=friends2.get(i).get(0);
-            friends[i]=friends2.get(i).get(1);
-            url[i]=friends2.get(i).get(2);
-            orientation[i]=friends2.get(i).get(3);
-        }
 
         ArrayList<ImageItem>data=new ArrayList<>();
-        for (int i=0;i<url.length;i++){
+        for (int i=0;i<urlgallery.length;i++){
             URL u = null;
             try {
-                u = new URL(url[i]);
+                u = new URL(urlgallery[i]);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
@@ -87,20 +88,20 @@ public class Gallery extends AppCompatActivity {
             }
             try {
                 Matrix matrix = new Matrix();
-                if (orientation[i].equals("6")) {
+                if (orientationgallery[i].equals("6")) {
                     matrix.postRotate(90);
                 }
-                else if (orientation[i].equals("3")) {
+                else if (orientationgallery[i].equals("3")) {
                     matrix.postRotate(180);
                 }
-                else if (orientation[i].equals("8")) {
+                else if (orientationgallery[i].equals("8")) {
                     matrix.postRotate(270);
                 }
                 bp[0] = Bitmap.createBitmap(bp[0], 0, 0, bp[0].getWidth(), bp[0].getHeight(), matrix, true);
             }
             catch (Exception e) {
             }
-            data.add(new ImageItem(bp[0],friends[i]));
+            data.add(new ImageItem(bp[0],friendsgallery[i]));
         }
 
         gridView = (GridView) findViewById(R.id.gridView);
@@ -110,13 +111,9 @@ public class Gallery extends AppCompatActivity {
         gridView.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 Intent i = new Intent(Gallery.this, ShowPictureGallery.class);
-                i.putExtra("urlaccepted", url[position]);
-                i.putExtra("orientationaccepted", orientation[position]);
-                i.putExtra("myID", myID);
-                i.putExtra("url", url);
-                i.putExtra("orientation", orientation);
-                i.putExtra("date",date);
-                i.putExtra("listofcontact",friends);
+                i.putExtra("stringaccepted", urlgallery[position]);
+                i.putExtra("orientationaccepted", orientationgallery[position]);
+                i.putExtra("numaccepted",numgallery[position]);
                 startActivity(i);
             }
         });
@@ -125,8 +122,8 @@ public class Gallery extends AppCompatActivity {
         Home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BWHome backgroundWorker = new BWHome(Gallery.this);
-                backgroundWorker.execute(myID);
+                BWHome bw=new BWHome(Gallery.this);
+                bw.execute(myID);
             }
         });
     }

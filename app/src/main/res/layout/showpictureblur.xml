@@ -6,7 +6,7 @@
     android:gravity="center">
 
     <ImageView
-        android:id="@+id/imgView3"
+        android:id="@+id/imgView4"
         android:src="@drawable/apple"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
@@ -19,13 +19,14 @@
         android:gravity="bottom|center">
 
         <Button
-            android:id="@+id/home7"
+            android:id="@+id/home10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center"
             android:text="Home" />
 
     </RelativeLayout>
+
     <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
@@ -34,7 +35,7 @@
         android:gravity="top">
 
         <Button
-            android:id="@+id/suppress1"
+            android:id="@+id/suppress2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="top|right"

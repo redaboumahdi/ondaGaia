@@ -1,104 +1,143 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:gravity="center">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/Registration"
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="top|center"
-        android:text="REGISTRATION"
-        android:textSize="15dp" />
+        android:layout_height="fill_parent"
+        android:gravity="center">
 
-    <TextView
-        android:id="@+id/Pseudo2"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/Registration"
-        android:text="Pseudo"
-        android:textSize="15dp" />
 
-    <EditText
-        android:id="@+id/PSEUDO2"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/Pseudo2"
-        android:inputType="textMultiLine"
-        android:lines="1" />
+        <TextView
+            android:id="@+id/Registration"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top|center"
+            android:text="REGISTRATION"
+            android:textSize="10dp" />
 
-    <TextView
-        android:id="@+id/First_Name"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/PSEUDO2"
-        android:text="First Name"
-        android:textSize="15dp" />
+        <TextView
+            android:id="@+id/Pseudo2"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/Registration"
+            android:text="Pseudo"
+            android:textSize="10dp" />
 
-    <EditText
-        android:id="@+id/FIRSTNAME"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/First_Name"
-        android:inputType="textMultiLine"
-        android:lines="1" />
+        <EditText
+            android:id="@+id/PSEUDO2"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/Pseudo2"
+            android:inputType="textMultiLine"
+            android:lines="1" />
 
-    <TextView
-        android:id="@+id/Last_Name"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/FIRSTNAME"
-        android:text="Last Name"
-        android:textSize="15dp" />
+        <TextView
+            android:id="@+id/First_Name"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/PSEUDO2"
+            android:text="First Name"
+            android:textSize="10dp" />
 
-    <EditText
-        android:id="@+id/LASTNAME"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/Last_Name"
-        android:inputType="textMultiLine"
-        android:lines="1" />
+        <EditText
+            android:id="@+id/FIRSTNAME"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/First_Name"
+            android:inputType="textMultiLine"
+            android:lines="1" />
 
-    <TextView
-        android:id="@+id/Password"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/LASTNAME"
-        android:text="Password"
-        android:textSize="15dp" />
+        <TextView
+            android:id="@+id/Last_Name"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/FIRSTNAME"
+            android:text="Last Name"
+            android:textSize="10dp" />
 
-    <EditText
-        android:id="@+id/PASSWORD"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/Password"
-        android:inputType="textMultiLine"
-        android:lines="1" />
+        <EditText
+            android:id="@+id/LASTNAME"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/Last_Name"
+            android:inputType="textMultiLine"
+            android:lines="1" />
 
-    <TextView
-        android:id="@+id/Confirm_Password"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/PASSWORD"
-        android:text="Confirm Password"
-        android:textSize="15dp" />
+        <TextView
+            android:id="@+id/phone"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/LASTNAME"
+            android:text="Phone Number"
+            android:textSize="10dp" />
 
-    <EditText
-        android:id="@+id/PASSWORDBIS"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/Confirm_Password"
-        android:inputType="textMultiLine"
-        android:lines="1" />
+        <EditText
+            android:id="@+id/PHONE"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/phone"
+            android:inputType="textMultiLine"
+            android:lines="1" />
 
-    <Button
-        android:id="@+id/Submit_and_Connect"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/PASSWORDBIS"
-        android:text="Submit and Connect" />
+        <TextView
+            android:id="@+id/mail"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/PHONE"
+            android:text="Mail"
+            android:textSize="10dp" />
 
-</RelativeLayout>
+        <EditText
+            android:id="@+id/MAIL"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/mail"
+            android:inputType="textMultiLine"
+            android:lines="1" />
+
+        <TextView
+            android:id="@+id/Password"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/MAIL"
+            android:text="Password"
+            android:textSize="10dp" />
+
+        <EditText
+            android:id="@+id/PASSWORD"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/Password"
+            android:inputType="textPassword"
+            android:password="true" />
+
+        <TextView
+            android:id="@+id/Confirm_Password"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/PASSWORD"
+            android:text="Confirm Password"
+            android:textSize="10dp" />
+
+        <EditText
+            android:id="@+id/PASSWORDBIS"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/Confirm_Password"
+            android:inputType="textPassword"
+            android:password="true"/>
+
+        <Button
+            android:id="@+id/Submit_and_Connect"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/PASSWORDBIS"
+            android:text="Submit and Connect" />
+
+
+    </RelativeLayout>
+
+</ScrollView>

@@ -34,8 +34,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/Password"
-        android:inputType="textMultiLine"
-        android:lines="1" />
+        android:inputType="textPassword"
+        android:password="true" />
 
     <Button
         android:id="@+id/Connect"

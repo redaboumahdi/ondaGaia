@@ -26,7 +26,7 @@ public class BWPutAccepted extends AsyncTask<String,Void,String> {
         try {
             String num = params[0];
             String date=params[1];
-            String put_url = "http://192.168.0.31:8888/putaccepted.php";
+            String put_url = "http://192.168.8.102:8888/putaccepted.php";
             URL url = new URL(put_url);
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             httpURLConnection.setRequestMethod("POST");
